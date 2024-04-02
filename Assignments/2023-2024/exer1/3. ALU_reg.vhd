@@ -29,6 +29,24 @@ architecture structural of ALU_reg is
 		Resetn, Clock: IN STD_LOGIC
 	);
 	end component;
+	
+	-- Register 1 bit
+	component reg1bit
+	port (
+		D: IN STD_LOGIC;
+		Q: OUT STD_LOGIC;
+		Resetn, Clock: IN STD_LOGIC
+	);
+	end component;
+	
+	-- Register 4 bit
+	component reg4bit
+	port (
+		D: IN STD_LOGIC_VECTOR(3 DOWNTO 0);
+		Q: OUT STD_LOGIC_VECTOR(3 DOWNTO 0);
+		Resetn, Clock: IN STD_LOGIC
+	);
+	end component;
 		
 	-- ALU
 	component ALUxbit
@@ -45,45 +63,62 @@ architecture structural of ALU_reg is
 
 	signal clk_in : std_logic; -- clock
 	signal res_in : std_logic; -- reset
-	signal oper : std_logic_vector(3 downto 0); -- entity operation
+	signal aluin_oper, regout_oper : std_logic_vector(3 downto 0); -- entity operation
 	signal input1, input2 : std_logic_vector(N-1 downto 0); -- entity inputs
 	signal alu_in1, alu_in2 : std_logic_vector(N-1 downto 0); -- alu inputs
 	signal alu_out : std_logic_vector(N-1 downto 0); -- alu output
+	signal zero_out : std_logic;
 
 begin
 
 	clk_in <= clk;
 	res_in <= res;
-	oper <= operation;
+	aluin_oper <= operation;
 	input1 <= D1;
 	input2 <= D2;
 
-	-- Input to first register
+	-- D1 to register
 	reg_in1: regxbit port map (
 		D => input1,
 		Q => alu_in1,
 		Resetn => res_in,
 		Clock => clk_in);
 
-	-- Input to second register
+	-- D2 to register
 	reg_in2: regxbit port map (
 		D => input2,
 		Q => alu_in2,
 		Resetn => res_in,
 		Clock => clk_in);
+		
+	-- operation to register
+	reg_oper: reg4bit 
+	   port map (
+	   D => aluin_oper,
+	   Q => regout_oper,
+	   Resetn => res_in,
+	   Clock => clk_in);
 	
 	-- ALU
 	ALU_U: ALUxbit port map (
 		D1 => alu_in1,
 		D2 => alu_in2,
-		operation => oper,
+		operation => regout_oper,
 		alu_res => alu_out,
-		zero => zero);
+		zero => zero_out);
 
-	-- Output to register
+	-- ALU Output to register
 	reg_out: regxbit port map (
 		D => alu_out,
 		Q => alu_reg_out,
+		Resetn => res_in,
+		Clock => clk_in);
+
+	-- Zero Output to register
+	ALU_zero_out: reg1bit  
+	   port map (
+		D => zero_out,
+		Q => zero,
 		Resetn => res_in,
 		Clock => clk_in);
 		
