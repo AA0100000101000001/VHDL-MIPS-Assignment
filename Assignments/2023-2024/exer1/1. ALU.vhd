@@ -21,12 +21,21 @@ begin
 	process(D1, D2, operation)
 	begin
 		case operation is
-				-- addittion
+			-- addittion
 			when "0011" =>
 				res <= std_logic_vector(unsigned(D1) + unsigned(D2));
-				-- subtract
+			-- subtraction
 			when "0110" =>
 				res <= std_logic_vector(unsigned(D1) - unsigned(D2));
+			-- mutliplication
+			--when "0010" =>
+			--	res<= std_logic_vector(to_unsigned((to_integer(unsigned(D1)) * to_integer(unsigned(D2))),8));
+			-- AND
+			when "1000" =>
+				res <= D1 and D2;
+			-- OR
+			when "1001" =>
+				res <= D1 OR D2;
 			when others => NULL;
 		end case;
 	end process;
