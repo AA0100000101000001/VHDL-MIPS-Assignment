@@ -42,24 +42,26 @@ begin
     begin
       
       -- addition
-      D1_tb <= x"1010";
-      D2_tb <= x"0101";
+      D1_tb <= x"0001";
+      D2_tb <= x"0001";
       operation_tb <= "0011";
       wait for 600 ns;
 
-      -- subtract
-      D1_tb <= x"5555";
-      D2_tb <= x"1111";
+      -- subtraction
       operation_tb <= "0110";
       wait for 600 ns;
 
-      -- subtract equal
-      D1_tb <= x"1111";
-      D2_tb <= x"1111";
-      operation_tb <= "0110";
+      -- AND
+      D1_tb <= x"0001";
+      D2_tb <= x"0003";
+      operation_tb <= "1000";
       wait for 600 ns;
 
-      -- runs for 1800 ns
+      -- OR
+      operation_tb <= "1001";
+      wait for 600 ns;
+
+      -- runs for 2400 ns
       
   end process;
 end test;

@@ -4,7 +4,7 @@ USE IEEE.numeric_std.all;
 
 entity ALUxbit is 
 generic (
-	N : integer := 32
+	N : integer := 64
 );
 port (
 	-- ALU inputs
@@ -25,12 +25,18 @@ begin
 	process(D1, D2, operation)
 	begin
 		case operation is
-				-- addittion
+			-- addittion
 			when "0011" =>
 				res <= std_logic_vector(unsigned(D1) + unsigned(D2));
-				-- subtract
+			-- subtract
 			when "0110" =>
 				res <= std_logic_vector(unsigned(D1) - unsigned(D2));
+			-- AND
+			when "1000" =>
+				res <= D1 and D2;
+			-- OR
+			when "1001" =>
+				res <= D1 OR D2;
 			when others => NULL;
 		end case;
 	end process;
