@@ -4,7 +4,7 @@ USE IEEE.numeric_std.all;
 
 entity ALUxbit is 
 generic (
-	N : integer := 64
+	N : integer := 32
 );
 port (
 	-- ALU inputs

@@ -14,8 +14,8 @@ architecture test of ALU_reg_2stage_tb is
     D1 : in std_logic_vector(N-1 downto 0);
     D2 : in std_logic_vector(N-1 downto 0);
     operation : in std_logic_vector(3 downto 0);
-    clk : in std_logic;
     res : in std_logic;
+    clk : in std_logic;
     alu_reg_out : out std_logic_vector(N-1 downto 0);
     zero : out std_logic -- zero
   );
@@ -38,8 +38,8 @@ begin
     D1 => D1_tb,
     D2 => D2_tb,
     operation => operation_tb,
-    clk => clk_tb,
     res => res_tb,
+    clk => clk_tb,
     alu_reg_out => alu_reg_out_tb,
     zero => zero_tb);
 
@@ -63,21 +63,25 @@ begin
       
       -- addition
       D1_tb <= x"00000001";
-      D2_tb <= x"00000002";
+      D2_tb <= x"00000001";
       operation_tb <= "0011";
       wait for 1800 ns;
 
-      -- subtract
+      -- subtraction
       operation_tb <= "0110";
       wait for 1800 ns;
 
-      -- subtract equal
-      D1_tb <= x"11111111";
-      D2_tb <= x"11111111";
-      operation_tb <= "0110";
+      -- AND
+      D1_tb <= x"00000001";
+      D2_tb <= x"00000003";
+      operation_tb <= "1000";
       wait for 1800 ns;
 
-      -- runs for 6000 ns
+      -- OR
+      operation_tb <= "1001";
+      wait for 1800 ns;
+
+      -- runs for 7800 ns
       
   end process;
 end test;
