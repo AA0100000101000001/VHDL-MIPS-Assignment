@@ -19,37 +19,53 @@ port (
 end ALU_clkxbit;
 
 architecture behavioral of ALU_clkxbit is
+    
+    signal add_alu_out : std_logic_vector(N-1 downto 0);
+    signal sub_alu_out : std_logic_vector(N-1 downto 0);
+    signal and_alu_out : std_logic_vector(N-1 downto 0);
+    signal or_alu_out : std_logic_vector(N-1 downto 0);
+    signal oper_reg1, oper_reg2 : std_logic_vector(3 downto 0);
 
-	signal res_alu_out : std_logic_vector(N-1 downto 0);
-	signal res_reg_out : std_logic_vector(N-1 downto 0);
+    signal res_alu_out : std_logic_vector(N-1 downto 0);
 
 begin
-	process(D1, D2, operation, resetn, clock)
+	
+	alu_res <= res_alu_out;
+	oper_reg1 <= operation;
+	zero <= '1' when unsigned(res_alu_out) = 0 else
+		  '0';
+
+	process(clock)
 	begin
+	   
+	   if rising_edge(clock) then
+	   
+        	add_alu_out <= std_logic_vector(unsigned(D1) + unsigned(D2));
+        	sub_alu_out <= std_logic_vector(unsigned(D1) - unsigned(D2));
+        	and_alu_out <= D1 and D2;
+        	or_alu_out <= D1 OR D2;
+        
+        	oper_reg2 <= oper_reg1;
+           
 		-- operation check
-		case operation is
+		case oper_reg2 is
 			-- addittion
-			when "0011" =>
-				res_alu_out <= std_logic_vector(unsigned(D1) + unsigned(D2));
+			when "0011" => 
+				res_alu_out <= add_alu_out;
 			-- subtract
-			when "0110" =>
-				res_alu_out <= std_logic_vector(unsigned(D1) - unsigned(D2));
+			when "0110" => 
+				res_alu_out <= sub_alu_out;
 			-- AND
-			when "1000" =>
-				res_alu_out <= D1 and D2;
+			when "1000" => 
+				res_alu_out <= and_alu_out;
 			-- OR
-			when "1001" =>
-				res_alu_out <= D1 OR D2;
-			when others => NULL;
+			when "1001" => 
+				res_alu_out <= or_alu_out;
+			when others => 
+			      null;
+			--    res_alu_out <= (others => '0');
 		end case;
-		-- register check
-		if resetn = '0' then
-			res_reg_out <= (others => '0');
-		elsif rising_edge(clock) then
-			res_reg_out <= res_alu_out;
-		end if;
+	   end if;
+	   
 	end process;
-	alu_res <= res_reg_out;
-	zero <= '1' when unsigned(res_reg_out) = 0 else
-		'0';
 end behavioral;

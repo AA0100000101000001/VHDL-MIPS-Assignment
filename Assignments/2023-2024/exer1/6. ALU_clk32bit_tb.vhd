@@ -58,29 +58,27 @@ begin
 
       -- enable register
       resetn_tb <= '1';
-      wait for 600 ns;
-      
       -- addition
       D1_tb <= x"00000001";
       D2_tb <= x"00000001";
       operation_tb <= "0011";
-      wait for 1200 ns;
+      wait for 1800 ns;
 
       -- subtraction
       operation_tb <= "0110";
-      wait for 1200 ns;
+      wait for 1800 ns;
 
       -- AND
       D1_tb <= x"00000001";
       D2_tb <= x"00000003";
       operation_tb <= "1000";
-      wait for 1200 ns;
+      wait for 1800 ns;
 
       -- OR
       operation_tb <= "1001";
-      wait for 1200 ns;
+      wait for 1800 ns;
 
-      -- runs for 5400 ns
+      -- runs for 8200 ns
       
   end process;
 end test;
